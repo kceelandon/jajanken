@@ -1,5 +1,9 @@
 let humanScore = 0;
 let computerScore = 0;
+const score = document.createElement("h1");
+const gameMessage = document.createElement("p");
+score.textContent = "0 - 0";
+gameMessage.textContent = "Welcome to Rock, Paper, Scissors! Please make a selection to start the game.";
 
 function getComputerChoice() {
     let choice = Math.floor(Math.random() * 3);
@@ -12,45 +16,54 @@ function getComputerChoice() {
     }
 }
 
-function getHumanChoice() {
-    let playerChoice = prompt("Please pick rock, paper, or scissors.").toLowerCase();
-    while (playerChoice !== "rock" && playerChoice !== "paper" && playerChoice !== "scissors") {
-        playerChoice = prompt("Please enter a valid choice of rock, paper, or scissors (case insensitive).").toLowerCase();
-    }
-    return playerChoice;
-}
-
 function playRound(humanChoice, computerChoice) {
     if (humanChoice === computerChoice) {
-        console.log("It's a draw!");
-        return 0;
+        gameMessage.textContent = "It's a draw!";
     } else if ((humanChoice === "rock" && computerChoice === "scissors") || (humanChoice === "paper" && computerChoice === "rock") || (humanChoice === "scissors" && computerChoice === "paper")) {
-        console.log("You win! " + humanChoice + " beats " + computerChoice + ".");
+        gameMessage.textContent = "You win! " + humanChoice + " beats " + computerChoice + ".";
         humanScore++;
-        return 1;
+        score.textContent = humanScore + " - " + computerScore;
     } else {
-        console.log("You lose! " + computerChoice + " beats " + humanChoice + ".");
+        gameMessage.textContent = "You lose! " + computerChoice + " beats " + humanChoice + ".";
         computerScore++;
-        return 2;
+        score.textContent = humanScore + " - " + computerScore;
+    }
+    if (humanScore === 5) {
+        gameMessage.textContent = "You won the game!";
+    } else if (computerScore === 5) {
+        gameMessage.textContent = "You lost the game!";
     }
 }
 
-function playGame(numberOfRounds) {
-    let index = 0;
-    while (index < numberOfRounds && humanScore <= (numberOfRounds / 2) && computerScore <= (numberOfRounds / 2)) {
-        let result = playRound(getHumanChoice(), getComputerChoice());
-        console.log("The score is " + humanScore + " : " + computerScore);
-        if (result > 0) {
-            ++index;
-        }
-    }
-    if (humanScore == computerScore) {
-        console.log("The game is a tie!");
-    } else if (humanScore > computerScore) {
-        console.log("You win the game!");
-    } else {
-        console.log("You lose the game!");
-    }
-}
+const gameDisplayContainer = document.createElement("div");
+gameDisplayContainer.appendChild(score);
+gameDisplayContainer.appendChild(gameMessage);
 
-playGame(5);
+
+const rock = document.createElement("button");
+const paper = document.createElement("button");
+const scissors = document.createElement("button");
+
+rock.textContent = "Rock";
+paper.textContent = "Paper";
+scissors.textContent = "Scissors"
+
+rock.addEventListener("click", () => {
+    playRound("rock", getComputerChoice());
+})
+
+paper.addEventListener("click", () => {
+    playRound("paper", getComputerChoice());
+})
+
+scissors.addEventListener("click", () => {
+    playRound("scissors", getComputerChoice());
+})
+
+const container = document.createElement("div");
+container.className = "container";
+container.appendChild(rock);
+container.appendChild(paper);
+container.appendChild(scissors);
+document.body.appendChild(gameDisplayContainer);
+document.body.appendChild(container);
